@@ -10,8 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@gluestack-style/react": "^1.0.45",
+    "@gluestack-ui/config": "^1.1.1",
+    "@gluestack-ui/themed": "^1.1.2",
     "react": "18.2.0",
     "react-native": "0.73.3",
+    "react-native-svg": "^13.4.0",
     "react-router-native": "^6.21.3"
   },
   "devDependencies": {
