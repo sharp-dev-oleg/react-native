@@ -1,6 +1,6 @@
 import {NativeRouter, Route, Routes} from 'react-router-native';
-import {Index} from './screens/Index.tsx';
-import {Signup} from './screens/Signup.tsx';
+import {Index} from './screens/Index';
+import {Signup} from './screens/Signup';
 import React from 'react';
 export function AppRoutes(): React.JSX.Element {
   return (

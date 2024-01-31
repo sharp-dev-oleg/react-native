@@ -1,24 +1,15 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Button, ButtonText, Text} from '@gluestack-ui/themed';
-import {Section} from '../components/Section.tsx';
+import {Heading, Text} from '@gluestack-ui/themed';
 import {Link} from 'react-router-native';
+import {Content} from '../components/Content';
 
 export function Index(): React.JSX.Element {
   return (
-    <View>
-      <Section title="Initial">Initial</Section>
+    <Content>
+      <Heading>Transactions</Heading>
       <Link to="/signup">
-        <Text>Test</Text>
+        <Text>Sign up</Text>
       </Link>
-      <Button
-        size="md"
-        variant="solid"
-        action="primary"
-        isDisabled={false}
-        isFocusVisible={false}>
-        <ButtonText>Add </ButtonText>
-      </Button>
-    </View>
+    </Content>
   );
 }
