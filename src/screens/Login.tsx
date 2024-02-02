@@ -16,9 +16,11 @@ import {
 } from '@gluestack-ui/themed';
 import {login} from '../api/login.ts';
 import {useNavigate} from 'react-router-native';
+import {useToken} from '../hooks/useToken.tsx';
 
 export function Login(): React.JSX.Element {
   const navigate = useNavigate();
+  const {setToken} = useToken();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -32,13 +34,14 @@ export function Login(): React.JSX.Element {
         const result = await login(email, password);
         setSuccess(true);
         setTimeout(() => {
+          setToken(result.id_token);
           navigate('/transactions');
         }, 1500);
       } catch (e) {
         setError((e as Error).message);
       }
     },
-    [email, password],
+    [email, password, setToken, navigate],
   );
 
   return (
