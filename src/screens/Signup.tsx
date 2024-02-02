@@ -31,6 +31,8 @@ export function Signup(): React.JSX.Element {
   const onPress = useCallback(
     async (_event: GestureResponderEvent) => {
       setError('');
+      setSuccess(false);
+
       try {
         await register(formData.username, formData.email, formData.password);
         setFormData({
