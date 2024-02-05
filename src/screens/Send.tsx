@@ -9,11 +9,19 @@ import {
   VStack,
 } from '@gluestack-ui/themed';
 import {Content} from '../components/Content';
+import {useToken} from '../hooks/useToken.tsx';
+import {createTransaction} from '../api/createTransaction.ts';
 
 export function Send(): React.JSX.Element {
-  const onPress = useCallback(() => {
-    console.log('onPress');
-  }, []);
+  const {token} = useToken();
+  const onPress = useCallback(async () => {
+    try {
+      const result = createTransaction('oleg', '1', token);
+      console.log('result', result);
+    } catch (e) {
+      console.log('error', (e as Error)?.message);
+    }
+  }, [token]);
   return (
     <Content>
       <Heading>New Transaction</Heading>
