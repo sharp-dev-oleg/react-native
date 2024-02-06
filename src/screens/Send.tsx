@@ -1,9 +1,13 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
+  Alert,
+  AlertIcon,
+  AlertText,
   Button,
   ButtonText,
   Divider,
   Heading,
+  InfoIcon,
   Input,
   InputField,
   VStack,
@@ -13,29 +17,58 @@ import {useToken} from '../hooks/useToken.tsx';
 import {createTransaction} from '../api/createTransaction.ts';
 
 export function Send(): React.JSX.Element {
+  const [name, setName] = useState('');
+  const [amount, setAmount] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const {token} = useToken();
   const onPress = useCallback(async () => {
+    setError('');
+    setSuccess(false);
+
     try {
-      const result = createTransaction('oleg', '1', token);
-      console.log('result', result);
+      await createTransaction(name, amount, token);
+      setName('');
+      setAmount('');
+      setSuccess(true);
     } catch (e) {
-      console.log('error', (e as Error)?.message);
+      setError((e as Error)?.message);
     }
-  }, [token]);
+  }, [name, amount, token]);
   return (
     <Content>
       <Heading>New Transaction</Heading>
       <Divider my="$2" />
       <VStack space="md" reversed={false}>
         <Input>
-          <InputField type="text" placeholder="Enter name" />
+          <InputField
+            onChangeText={setName}
+            type="text"
+            placeholder="Enter name"
+          />
         </Input>
         <Input>
-          <InputField type="text" placeholder="Enter amount" />
+          <InputField
+            onChangeText={setAmount}
+            type="text"
+            placeholder="Enter amount"
+          />
         </Input>
         <Button onPress={onPress} size="md" variant="solid" action="primary">
           <ButtonText>Send</ButtonText>
         </Button>
+        {error && (
+          <Alert action="error" variant="solid">
+            <AlertIcon as={InfoIcon} mr="$3" />
+            <AlertText>{error}</AlertText>
+          </Alert>
+        )}
+        {success && (
+          <Alert action="success" variant="solid">
+            <AlertIcon as={InfoIcon} mr="$3" />
+            <AlertText width="100%">Sent!</AlertText>
+          </Alert>
+        )}
       </VStack>
     </Content>
   );
