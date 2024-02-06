@@ -1,12 +1,26 @@
-import React, {useCallback, useEffect} from 'react';
-import {Button, ButtonText, Divider, Heading} from '@gluestack-ui/themed';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  Box,
+  Button,
+  ButtonText,
+  Divider,
+  Heading,
+  HStack,
+  Text,
+  VStack,
+} from '@gluestack-ui/themed';
 import {useNavigate} from 'react-router-native';
 import {Content} from '../components/Content';
 import {useToken} from '../hooks/useToken';
-import {getTransactions} from '../api/getTransactions';
+import {
+  getTransactions,
+  Transaction as TransactionType,
+} from '../api/getTransactions';
+import {Transaction} from '../components/Transaction.tsx';
 
 export function Transactions(): React.JSX.Element {
   const {token} = useToken();
+  const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const navigate = useNavigate();
   useEffect(() => {
     if (!token) {
@@ -15,7 +29,7 @@ export function Transactions(): React.JSX.Element {
 
     (async () => {
       const transactions = await getTransactions(token);
-      console.log('transactions', transactions);
+      setTransactions(transactions.trans_token);
     })();
   }, [token]);
 
@@ -25,16 +39,37 @@ export function Transactions(): React.JSX.Element {
 
   return (
     <Content>
-      <Heading>Transactions</Heading>
+      <HStack justifyContent="space-between">
+        <Heading>Transactions</Heading>
+        <Button
+          onPress={onPress}
+          width="$20"
+          size="xs"
+          variant="solid"
+          action="primary">
+          <ButtonText>Send</ButtonText>
+        </Button>
+      </HStack>
       <Divider my="$2" />
-      <Button
-        onPress={onPress}
-        width="$20"
-        size="sm"
-        variant="solid"
-        action="primary">
-        <ButtonText>Send</ButtonText>
-      </Button>
+      <Box>
+        <HStack space="md">
+          <Text w="$20" size="sm" bold={true}>
+            Username
+          </Text>
+          <Text w="$16" size="sm" bold={true}>
+            Amount
+          </Text>
+          <Text size="sm" bold={true}>
+            Date
+          </Text>
+        </HStack>
+        <Divider my="$2" />
+      </Box>
+      <VStack space="md">
+        {transactions.map(transaction => (
+          <Transaction key={transaction.id} transaction={transaction} />
+        ))}
+      </VStack>
     </Content>
   );
 }
