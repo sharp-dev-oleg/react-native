@@ -9,5 +9,5 @@ export const login = async (email: string, password: string) => {
     email,
     password,
   };
-  return request('POST', '/sessions/create', data);
+  return request<LoginResponse>('POST', '/sessions/create', data);
 };

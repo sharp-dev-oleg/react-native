@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Button,
   ButtonIcon,
@@ -7,8 +7,22 @@ import {
   StatusBar,
   Text,
 } from '@gluestack-ui/themed';
+import {getUserInfo} from '../api/user.ts';
+import {useToken} from '../hooks/useToken.tsx';
 
 export function Statusbar() {
+  const {token} = useToken();
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+
+    (async () => {
+      const user = await getUserInfo(token);
+      console.log('user', user);
+    })();
+  }, [token]);
+
   return (
     <>
       <StatusBar backgroundColor="$violet600" barStyle="light-content" />
