@@ -77,7 +77,7 @@ export function Statusbar() {
               <Avatar bgColor="$blue600" size="sm" borderRadius="$full">
                 <AvatarFallbackText>{userInfo.name}</AvatarFallbackText>
               </Avatar>
-              <VStack>
+              <VStack alignItems="center">
                 <Heading size="xs" color="white">
                   {userInfo.name}
                 </Heading>

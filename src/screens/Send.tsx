@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   AlertIcon,
@@ -15,6 +15,7 @@ import {
 import {Content} from '../components/Content';
 import {useToken} from '../hooks/useToken.tsx';
 import {createTransaction} from '../api/createTransaction.ts';
+import {getUsers} from '../api/getUsers.ts';
 
 export function Send(): React.JSX.Element {
   const [name, setName] = useState('');
@@ -35,6 +36,14 @@ export function Send(): React.JSX.Element {
       setError((e as Error)?.message);
     }
   }, [name, amount, token]);
+
+  useEffect(() => {
+    (async () => {
+      const users = await getUsers('oleg', token);
+      console.log('users', users);
+    })();
+  }, [token]);
+
   return (
     <Content>
       <Heading>New Transaction</Heading>
