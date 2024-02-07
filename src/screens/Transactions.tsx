@@ -24,6 +24,7 @@ export function Transactions(): React.JSX.Element {
   const navigate = useNavigate();
   useEffect(() => {
     if (!token) {
+      setTransactions([]);
       return;
     }
 

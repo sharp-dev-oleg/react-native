@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Avatar,
   AvatarFallbackText,
@@ -8,7 +8,10 @@ import {
   ButtonIcon,
   Heading,
   HStack,
+  Menu,
   MenuIcon,
+  MenuItem,
+  MenuItemLabel,
   StatusBar,
   Text,
   VStack,
@@ -17,10 +20,11 @@ import {getUserInfo, UserInfo} from '../api/user.ts';
 import {useToken} from '../hooks/useToken.tsx';
 
 export function Statusbar() {
-  const {token} = useToken();
+  const {token, setToken} = useToken();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   useEffect(() => {
     if (!token) {
+      setUserInfo(null);
       return;
     }
 
@@ -29,6 +33,10 @@ export function Statusbar() {
       setUserInfo(user.user_info_token);
     })();
   }, [token]);
+
+  const onExit = useCallback(() => {
+    setToken('');
+  }, [setToken]);
 
   return (
     <>
@@ -42,12 +50,26 @@ export function Statusbar() {
         alignItems="center"
         w="100%">
         <HStack alignItems="center">
-          <Button bg="transparent">
-            <ButtonIcon size="sm" as={MenuIcon} />
-          </Button>
-          <Text color="white" size="lg" fontWeight="bold">
-            Home
-          </Text>
+          <Menu
+            bg="$violet100"
+            placement="bottom left"
+            p="$0.5"
+            trigger={({...triggerProps}) => {
+              return (
+                <Button bg="transparent" {...triggerProps}>
+                  <ButtonIcon size="sm" as={MenuIcon} />
+                </Button>
+              );
+            }}>
+            <MenuItem py="$0.5" key="Menu" textValue="Menu">
+              <MenuItemLabel bold={true}>Menu</MenuItemLabel>
+            </MenuItem>
+            {token && (
+              <MenuItem py="$0.5" onPress={onExit} key="Exit" textValue="Exit">
+                <MenuItemLabel>Exit</MenuItemLabel>
+              </MenuItem>
+            )}
+          </Menu>
         </HStack>
         <HStack>
           {userInfo ? (
