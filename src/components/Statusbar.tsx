@@ -1,17 +1,24 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Avatar,
+  AvatarFallbackText,
+  Badge,
+  BadgeText,
   Button,
   ButtonIcon,
+  Heading,
   HStack,
   MenuIcon,
   StatusBar,
   Text,
+  VStack,
 } from '@gluestack-ui/themed';
-import {getUserInfo} from '../api/user.ts';
+import {getUserInfo, UserInfo} from '../api/user.ts';
 import {useToken} from '../hooks/useToken.tsx';
 
 export function Statusbar() {
   const {token} = useToken();
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   useEffect(() => {
     if (!token) {
       return;
@@ -19,7 +26,7 @@ export function Statusbar() {
 
     (async () => {
       const user = await getUserInfo(token);
-      console.log('user', user);
+      setUserInfo(user.user_info_token);
     })();
   }, [token]);
 
@@ -43,9 +50,30 @@ export function Statusbar() {
           </Text>
         </HStack>
         <HStack>
-          <Text color="white" size="lg" fontWeight="bold">
-            WIP
-          </Text>
+          {userInfo ? (
+            <HStack space="sm">
+              <Avatar bgColor="$blue600" size="sm" borderRadius="$full">
+                <AvatarFallbackText>{userInfo.name}</AvatarFallbackText>
+              </Avatar>
+              <VStack>
+                <Heading size="xs" color="white">
+                  {userInfo.name}
+                </Heading>
+                <Badge
+                  p="$0"
+                  size="sm"
+                  variant="solid"
+                  borderRadius="$sm"
+                  action="info">
+                  <BadgeText>{userInfo.balance}</BadgeText>
+                </Badge>
+              </VStack>
+            </HStack>
+          ) : (
+            <Text color="white" size="lg" fontWeight="bold">
+              WIP
+            </Text>
+          )}
         </HStack>
       </HStack>
     </>
