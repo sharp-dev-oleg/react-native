@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   Avatar,
   AvatarFallbackText,
@@ -16,24 +16,10 @@ import {
   Text,
   VStack,
 } from '@gluestack-ui/themed';
-import {getUserInfo, UserInfo} from '../api/user.ts';
-import {useToken} from '../hooks/useToken.tsx';
+import {useUser} from '../hooks/useUser.tsx';
 
 export function Statusbar() {
-  const {token, setToken} = useToken();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  useEffect(() => {
-    if (!token) {
-      setUserInfo(null);
-      return;
-    }
-
-    (async () => {
-      const user = await getUserInfo(token);
-      setUserInfo(user.user_info_token);
-    })();
-  }, [token]);
-
+  const {setToken, user} = useUser();
   const onExit = useCallback(() => {
     setToken('');
   }, [setToken]);
@@ -64,7 +50,7 @@ export function Statusbar() {
             <MenuItem py="$0.5" key="Menu" textValue="Menu">
               <MenuItemLabel bold={true}>Menu</MenuItemLabel>
             </MenuItem>
-            {token && (
+            {user && (
               <MenuItem py="$0.5" onPress={onExit} key="Exit" textValue="Exit">
                 <MenuItemLabel>Exit</MenuItemLabel>
               </MenuItem>
@@ -72,14 +58,14 @@ export function Statusbar() {
           </Menu>
         </HStack>
         <HStack>
-          {userInfo ? (
+          {user ? (
             <HStack space="sm">
               <Avatar bgColor="$blue600" size="sm" borderRadius="$full">
-                <AvatarFallbackText>{userInfo.name}</AvatarFallbackText>
+                <AvatarFallbackText>{user.name}</AvatarFallbackText>
               </Avatar>
               <VStack alignItems="center">
                 <Heading size="xs" color="white">
-                  {userInfo.name}
+                  {user.name}
                 </Heading>
                 <Badge
                   p="$0"
@@ -87,7 +73,7 @@ export function Statusbar() {
                   variant="solid"
                   borderRadius="$sm"
                   action="info">
-                  <BadgeText>{userInfo.balance}</BadgeText>
+                  <BadgeText>{user.balance}</BadgeText>
                 </Badge>
               </VStack>
             </HStack>

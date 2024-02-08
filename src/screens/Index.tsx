@@ -3,11 +3,11 @@ import {Divider, Heading, Text} from '@gluestack-ui/themed';
 import {Link} from 'react-router-native';
 import {Content} from '../components/Content';
 import {Login} from './Login.tsx';
-import {useToken} from '../hooks/useToken.tsx';
+import {useUser} from '../hooks/useUser.tsx';
 import {Transactions} from './Transactions.tsx';
 
 export function Index(): React.JSX.Element {
-  const {token} = useToken();
+  const {token} = useUser();
   return (
     <Content>
       <Heading>Transactions</Heading>

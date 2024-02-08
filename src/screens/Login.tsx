@@ -16,11 +16,11 @@ import {
 } from '@gluestack-ui/themed';
 import {login} from '../api/login.ts';
 import {useNavigate} from 'react-router-native';
-import {useToken} from '../hooks/useToken.tsx';
+import {useUser} from '../hooks/useUser.tsx';
 
 export function Login(): React.JSX.Element {
   const navigate = useNavigate();
-  const {setToken} = useToken();
+  const {setToken} = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');

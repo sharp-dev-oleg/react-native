@@ -11,7 +11,7 @@ import {
 } from '@gluestack-ui/themed';
 import {useNavigate} from 'react-router-native';
 import {Content} from '../components/Content';
-import {useToken} from '../hooks/useToken';
+import {useUser} from '../hooks/useUser.tsx';
 import {
   getTransactions,
   Transaction as TransactionType,
@@ -19,7 +19,7 @@ import {
 import {Transaction} from '../components/Transaction.tsx';
 
 export function Transactions(): React.JSX.Element {
-  const {token} = useToken();
+  const {token} = useUser();
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const navigate = useNavigate();
   useEffect(() => {

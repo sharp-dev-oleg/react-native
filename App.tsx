@@ -6,7 +6,7 @@ import {config} from '@gluestack-ui/config';
 import {Colors} from './src/colors';
 import {AppRoutes} from './src/Routes';
 import {Statusbar} from './src/components/Statusbar';
-import {TokenProvider} from './src/hooks/useToken.tsx';
+import {UserProvider} from './src/hooks/useUser.tsx';
 
 function App(): React.JSX.Element {
   const backgroundStyle = {
@@ -15,7 +15,7 @@ function App(): React.JSX.Element {
 
   return (
     <GluestackUIProvider config={config}>
-      <TokenProvider>
+      <UserProvider>
         <Statusbar />
         <SafeAreaView style={backgroundStyle}>
           <ScrollView
@@ -24,7 +24,7 @@ function App(): React.JSX.Element {
             <AppRoutes />
           </ScrollView>
         </SafeAreaView>
-      </TokenProvider>
+      </UserProvider>
     </GluestackUIProvider>
   );
 }

@@ -13,7 +13,7 @@ import {
   VStack,
 } from '@gluestack-ui/themed';
 import {Content} from '../components/Content';
-import {useToken} from '../hooks/useToken.tsx';
+import {useUser} from '../hooks/useUser.tsx';
 import {createTransaction} from '../api/createTransaction.ts';
 import {getUsers} from '../api/getUsers.ts';
 
@@ -22,7 +22,7 @@ export function Send(): React.JSX.Element {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const {token} = useToken();
+  const {token, refresh} = useUser();
   const onPress = useCallback(async () => {
     setError('');
     setSuccess(false);
@@ -32,6 +32,7 @@ export function Send(): React.JSX.Element {
       setName('');
       setAmount('');
       setSuccess(true);
+      refresh();
     } catch (e) {
       setError((e as Error)?.message);
     }
@@ -51,6 +52,7 @@ export function Send(): React.JSX.Element {
       <VStack space="md" reversed={false}>
         <Input>
           <InputField
+            value={name}
             onChangeText={setName}
             type="text"
             placeholder="Enter name"
@@ -58,6 +60,7 @@ export function Send(): React.JSX.Element {
         </Input>
         <Input>
           <InputField
+            value={amount}
             onChangeText={setAmount}
             type="text"
             placeholder="Enter amount"
