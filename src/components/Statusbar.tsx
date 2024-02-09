@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {
   Avatar,
   AvatarFallbackText,
@@ -16,13 +16,58 @@ import {
   Text,
   VStack,
 } from '@gluestack-ui/themed';
+import {Link, useNavigate} from 'react-router-native';
+import {Selection} from '@react-types/shared/src/selection';
 import {useUser} from '../hooks/useUser.tsx';
 
 export function Statusbar() {
   const {setToken, user} = useUser();
+  const navigate = useNavigate();
   const onExit = useCallback(() => {
     setToken('');
   }, [setToken]);
+
+  const onSelectionChange = useCallback(
+    (keys: Selection) => {
+      if (keys instanceof Set) {
+        const key = (keys as unknown as {currentKey: string}).currentKey;
+        if (key.startsWith('/')) {
+          navigate(key);
+        }
+      }
+    },
+    [navigate],
+  );
+
+  const menuItems = useMemo(() => {
+    let items = [
+      <MenuItem py="$0.5" key="" textValue="Menu">
+        <MenuItemLabel bold={true}>Menu</MenuItemLabel>
+      </MenuItem>,
+      <MenuItem py="$0.5" key="/" textValue="Home">
+        <MenuItemLabel>Home</MenuItemLabel>
+      </MenuItem>,
+    ];
+
+    if (user) {
+      items = items.concat(
+        <MenuItem py="$0.5" key="/send" textValue="Send">
+          <MenuItemLabel>Send</MenuItemLabel>
+        </MenuItem>,
+        <MenuItem py="$0.5" onPress={onExit} key="Exit" textValue="Exit">
+          <MenuItemLabel>Exit</MenuItemLabel>
+        </MenuItem>,
+      );
+    } else {
+      items.push(
+        <MenuItem py="$0.5" key="/signup" textValue="Signup">
+          <MenuItemLabel>Sign up</MenuItemLabel>
+        </MenuItem>,
+      );
+    }
+
+    return items;
+  }, [user, onExit]);
 
   return (
     <>
@@ -40,24 +85,19 @@ export function Statusbar() {
             bg="$violet100"
             placement="bottom left"
             p="$0.5"
+            selectionMode="single"
+            onSelectionChange={onSelectionChange}
             trigger={({...triggerProps}) => {
               return (
-                <Button bg="transparent" {...triggerProps}>
+                <Button px="$4" bg="transparent" {...triggerProps}>
                   <ButtonIcon size="sm" as={MenuIcon} />
                 </Button>
               );
             }}>
-            <MenuItem py="$0.5" key="Menu" textValue="Menu">
-              <MenuItemLabel bold={true}>Menu</MenuItemLabel>
-            </MenuItem>
-            {user && (
-              <MenuItem py="$0.5" onPress={onExit} key="Exit" textValue="Exit">
-                <MenuItemLabel>Exit</MenuItemLabel>
-              </MenuItem>
-            )}
+            {menuItems}
           </Menu>
         </HStack>
-        <HStack>
+        <HStack justifyContent="center">
           {user ? (
             <HStack space="sm">
               <Avatar bgColor="$blue600" size="sm" borderRadius="$full">
@@ -78,9 +118,11 @@ export function Statusbar() {
               </VStack>
             </HStack>
           ) : (
-            <Text color="white" size="lg" fontWeight="bold">
-              WIP
-            </Text>
+            <Link to="/signup">
+              <Text color="white" size="sm" px="$4">
+                Sign up
+              </Text>
+            </Link>
           )}
         </HStack>
       </HStack>
