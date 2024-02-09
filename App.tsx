@@ -1,5 +1,6 @@
 import React from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
+import {NativeRouter} from 'react-router-native';
 import {GluestackUIProvider} from '@gluestack-ui/themed';
 import {config} from '@gluestack-ui/config';
 
@@ -14,18 +15,20 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <GluestackUIProvider config={config}>
-      <UserProvider>
-        <Statusbar />
-        <SafeAreaView style={backgroundStyle}>
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            style={backgroundStyle}>
-            <AppRoutes />
-          </ScrollView>
-        </SafeAreaView>
-      </UserProvider>
-    </GluestackUIProvider>
+    <NativeRouter>
+      <GluestackUIProvider config={config}>
+        <UserProvider>
+          <Statusbar />
+          <SafeAreaView style={backgroundStyle}>
+            <ScrollView
+              contentInsetAdjustmentBehavior="automatic"
+              style={backgroundStyle}>
+              <AppRoutes />
+            </ScrollView>
+          </SafeAreaView>
+        </UserProvider>
+      </GluestackUIProvider>
+    </NativeRouter>
   );
 }
 
